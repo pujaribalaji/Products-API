@@ -1,31 +1,50 @@
-const express = require("express");
-const mongoose = require("mongoose");
-const db = require("./models/db");
-const Product = require("./models/product");
-const cors = require("cors");
-const axios = require("axios");
+const express=require('express');
+const axios=require('axios');
+const cors=require('cors'); 
 
-const app = express();
-const port = 5000;
+const app=express();
+const port=5000;
 
 app.use(cors());
 
-// API endpoint to fetch and store products
-app.get("/api/products", async (req, res) => {
-  try {
-    const response = await axios.get("https://dummyjson.com/docs/products");
-    const products = response.data;
+//API fetching the all products 
+app.get('/api/products', (req, res) => {
+  axios.get('https://dummyjson.com/products')
+    .then(response => {
+      res.json(response.data);
+    })
+    .catch(error => {
+      console.error('Error fetching data:', error);
+      res.status(500).json({ error: 'An error occurred while fetching data.' });
+    });
+});
 
-    // Store products in your MongoDB database
-    await Product.insertMany(products);
+//API fetching a single product to select particular category
+app.get('/api/categories', (req, res) => {
+  axios.get('https://dummyjson.com/products/categories')
+    .then(response => {
+      res.json(response.data);
+    })
+    .catch(error => {
+      console.error('Error fetching categories:', error);
+      res.status(500).json({ error: 'An error occurred while fetching categories.' });
+    });
+});
 
-    res.json(products);
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: "Server error" });
-  }
+// API fectching the products based on the category 
+app.get('/api/products/category/:category', (req, res) => {
+  const category = req.params.category; // Extract the category from the route parameter
+
+  axios.get(`https://dummyjson.com/products/category/${category}`)
+    .then(response => {
+      res.json(response.data);
+    })
+    .catch(error => {
+      console.error('Error fetching products by category:', error);
+      res.status(500).json({ error: 'An error occurred while fetching products by category.' });
+    });
 });
 
 app.listen(port, () => {
-  console.log(`APP is running AT ${port}`);
+  console.log(`Server is running on port ${port}`);
 });
