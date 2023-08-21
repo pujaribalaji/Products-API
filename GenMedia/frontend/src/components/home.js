@@ -1,35 +1,33 @@
-// frontend/src/components/Home.js
+import React, { useState, useEffect } from "react";
+import "./home.css";
 
-import React, { useState, useEffect } from 'react';
-import './home.css';
-
-const Home=()=>{
+const Home = () => {
   const [products, setProducts] = useState([]);
   const [categories, setCategories] = useState([]);
-  const [selectedCategory, setSelectedCategory] = useState('All');
-  const [selectedSort, setSelectedSort] = useState('name');
+  const [selectedCategory, setSelectedCategory] = useState("All");
+  const [selectedSort, setSelectedSort] = useState("name");
 
   useEffect(() => {
-    fetch('http://localhost:5000/api/products')
+    fetch("http://localhost:5000/api/products")
       .then((res) => res.json())
       .then((data) => {
         setProducts(data.products);
       })
       .catch((error) => {
-        console.error('Error fetching data:', error);
+        console.error("Error fetching data:", error);
       });
 
-    fetch('http://localhost:5000/api/categories')
+    fetch("http://localhost:5000/api/categories")
       .then((res) => res.json())
       .then((data) => {
         if (Array.isArray(data)) {
-          setCategories(['All', ...data]);
+          setCategories(["All", ...data]);
         } else {
-          setCategories(['All']);
+          setCategories(["All"]);
         }
       })
       .catch((error) => {
-        console.error('Error fetching categories:', error);
+        console.error("Error fetching categories:", error);
       });
   }, []);
 
@@ -37,7 +35,7 @@ const Home=()=>{
   const sortProducts = (attribute) => {
     const sortedProducts = [...products];
     sortedProducts.sort((a, b) => {
-      if (attribute === 'price') {
+      if (attribute === "price") {
         return a[attribute] - b[attribute];
       } else {
         return a[attribute].localeCompare(b[attribute]);
@@ -49,14 +47,14 @@ const Home=()=>{
   // Filtering function
   const filterProductsByCategory = (category) => {
     setSelectedCategory(category);
-    if (category === 'All') {
-      fetch('http://localhost:5000/api/products')
+    if (category === "All") {
+      fetch("http://localhost:5000/api/products")
         .then((res) => res.json())
         .then((data) => {
           setProducts(data.products);
         })
         .catch((error) => {
-          console.error('Error fetching data:', error);
+          console.error("Error fetching data:", error);
         });
     } else {
       fetch(`http://localhost:5000/api/products/category/${category}`)
@@ -65,7 +63,7 @@ const Home=()=>{
           setProducts(data.products);
         })
         .catch((error) => {
-          console.error('Error fetching data for category:', error);
+          console.error("Error fetching data for category:", error);
         });
     }
   };
@@ -108,10 +106,7 @@ const Home=()=>{
         {products.map((product) => (
           <li key={product.id} className="product-item">
             <div className="product-image">
-              <img
-                src={product.images[0]}
-                alt={`Product ${product.id}`}
-              />
+              <img src={product.images[0]} alt={`Product ${product.id}`} />
             </div>
             <div className="product-info">
               <p className="product-name">{product.title}</p>
@@ -123,6 +118,6 @@ const Home=()=>{
       </ul>
     </div>
   );
-}
+};
 
 export default Home;
