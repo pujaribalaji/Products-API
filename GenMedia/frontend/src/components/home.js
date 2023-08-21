@@ -8,7 +8,7 @@ const Home = () => {
   const [selectedSort, setSelectedSort] = useState("name");
 
   useEffect(() => {
-    fetch("http://localhost:5000/api/products")
+    fetch("https://productfecthing-backend1.onrender.com/api/products")
       .then((res) => res.json())
       .then((data) => {
         setProducts(data.products);
@@ -17,7 +17,7 @@ const Home = () => {
         console.error("Error fetching data:", error);
       });
 
-    fetch("http://localhost:5000/api/categories")
+    fetch("https://productfecthing-backend1.onrender.com/api/categories")
       .then((res) => res.json())
       .then((data) => {
         if (Array.isArray(data)) {
@@ -48,7 +48,7 @@ const Home = () => {
   const filterProductsByCategory = (category) => {
     setSelectedCategory(category);
     if (category === "All") {
-      fetch("http://localhost:5000/api/products")
+      fetch("https://productfecthing-backend1.onrender.com/api/products")
         .then((res) => res.json())
         .then((data) => {
           setProducts(data.products);
@@ -57,7 +57,7 @@ const Home = () => {
           console.error("Error fetching data:", error);
         });
     } else {
-      fetch(`http://localhost:5000/api/products/category/${category}`)
+      fetch(`https://productfecthing-backend1.onrender.com/api/products/category/${category}`)
         .then((res) => res.json())
         .then((data) => {
           setProducts(data.products);
